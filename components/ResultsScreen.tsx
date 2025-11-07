@@ -1,5 +1,6 @@
 import React from 'react';
-import { Question } from '../types';
+// FIX: Add .ts extension to ensure module is resolved correctly.
+import { Question } from '../types.ts';
 
 interface ResultsScreenProps {
   score: number;

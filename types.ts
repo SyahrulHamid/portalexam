@@ -1,3 +1,4 @@
+// FIX: Provide full content for types.ts to define data structures used across the app.
 export interface Question {
   id: number;
   questionText: string;
@@ -6,24 +7,17 @@ export interface Question {
 }
 
 export interface Exam {
-  id: string;
+  id: number;
   title: string;
   subject: string;
-  duration: number; // in seconds
   questions: Question[];
+  duration: number; // in seconds
 }
 
-export enum UserRole {
-  ADMIN = 'Admin',
-  GURU = 'Guru',
-  MURID = 'Murid',
-}
+export type UserRole = 'admin' | 'guru' | 'murid';
 
-export enum View {
-  LOGIN,
-  ADMIN_DASHBOARD,
-  GURU_DASHBOARD,
-  MURID_DASHBOARD,
-  EXAM,
-  RESULTS,
+export interface User {
+  id: string;
+  name: string;
+  role: UserRole;
 }

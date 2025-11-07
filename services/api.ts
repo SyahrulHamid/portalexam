@@ -1,28 +1,35 @@
-import { MOCK_EXAMS } from '../constants/data';
-import { Exam } from '../types';
+// FIX: Provide full content for api.ts to create a mock API service.
+import { Exam, User } from '../types.ts';
+import { sampleExams, sampleUsers } from '../constants/data.ts';
 
-// Simulate a network delay
-const API_DELAY = 1200; // in milliseconds
+// Simulate API delay
+const apiDelay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Fetches the list of all available exams.
- * In a real application, this would be a network request to a backend server.
- * 
- * @returns A Promise that resolves with an array of Exam objects.
- */
-export const fetchExams = (): Promise<Exam[]> => {
-  console.log('API: Fetching exams...');
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // To simulate a potential API error, uncomment the following lines:
-      // if (Math.random() > 0.8) {
-      //   console.error('API: Simulated fetch error!');
-      //   reject(new Error('Simulated API error'));
-      //   return;
-      // }
-      
-      console.log('API: Exams fetched successfully.');
-      resolve(MOCK_EXAMS);
-    }, API_DELAY);
-  });
+export const fetchExams = async (): Promise<Exam[]> => {
+  console.log('Fetching exams...');
+  await apiDelay(500);
+  console.log('Fetched exams:', sampleExams);
+  return sampleExams;
 };
+
+export const fetchUsers = async (): Promise<User[]> => {
+  console.log('Fetching users...');
+  await apiDelay(700);
+  // In a real app, an admin might not see themselves in the user list
+  const manageableUsers = sampleUsers.filter(u => u.role !== 'admin');
+  console.log('Fetched manageable users:', manageableUsers);
+  return manageableUsers;
+};
+
+export const login = async (username: string, password: string): Promise<User | null> => {
+  console.log(`Attempting login for user: ${username}`);
+  await apiDelay(500);
+  // Simple mock login: find user by username, ignore password
+  const user = sampleUsers.find(u => u.id === username);
+  if (user) {
+    console.log('Login successful for:', user);
+    return user;
+  }
+  console.log('Login failed for:', username);
+  return null;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Exam } from '../types';
-import { fetchExams } from '../services/api';
+// FIX: Add .ts extension to ensure modules are resolved correctly.
+import { Exam } from '../types.ts';
+import { fetchExams } from '../services/api.ts';
 import LoadingSpinner from './LoadingSpinner';
 
 const GuruDashboard: React.FC = () => {

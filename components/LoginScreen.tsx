@@ -1,43 +1,85 @@
-import React from 'react';
-import { UserRole } from '../types';
+// FIX: Provide full implementation for the LoginScreen component.
+import React, { useState } from 'react';
+import { User } from '../types.ts';
+import { login } from '../services/api.ts';
 
 interface LoginScreenProps {
-  onLogin: (role: UserRole) => void;
+  onLoginSuccess: (user: User) => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    if (!username || !password) {
+      setError('Nama pengguna dan kata sandi harus diisi.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const user = await login(username, password);
+      if (user) {
+        onLoginSuccess(user);
+      } else {
+        setError('Nama pengguna atau kata sandi salah.');
+      }
+    } catch (err) {
+      setError('Terjadi kesalahan saat login. Coba lagi nanti.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center text-white p-4">
-      <h1 className="text-4xl md:text-5xl font-bold mb-4 text-cyan-400">Selamat Datang di Portal Ujian</h1>
-      <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-12">
-        Silakan masuk sesuai dengan peran Anda untuk melanjutkan.
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
-        {/* Admin Card */}
-        <div 
-          onClick={() => onLogin(UserRole.ADMIN)}
-          className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg border border-slate-700 shadow-lg hover:bg-slate-700/70 hover:border-cyan-500 transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-        >
-          <h2 className="text-2xl font-semibold mb-2 text-white">Admin</h2>
-          <p className="text-slate-400">Masuk untuk mengelola pengguna dan data master.</p>
-        </div>
-
-        {/* Guru Card */}
-        <div 
-          onClick={() => onLogin(UserRole.GURU)}
-          className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg border border-slate-700 shadow-lg hover:bg-slate-700/70 hover:border-cyan-500 transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-        >
-          <h2 className="text-2xl font-semibold mb-2 text-white">Guru</h2>
-          <p className="text-slate-400">Masuk untuk membuat dan mengelola ujian.</p>
-        </div>
-
-        {/* Murid Card */}
-        <div 
-          onClick={() => onLogin(UserRole.MURID)}
-          className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg border border-slate-700 shadow-lg hover:bg-slate-700/70 hover:border-cyan-500 transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-        >
-          <h2 className="text-2xl font-semibold mb-2 text-white">Murid</h2>
-          <p className="text-slate-400">Masuk untuk mengerjakan ujian dan melihat hasil.</p>
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+      <div className="w-full max-w-md bg-slate-800/70 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700">
+        <h1 className="text-3xl font-bold text-center text-cyan-400 mb-6">Selamat Datang</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
+              Nama Pengguna
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              placeholder="Contoh: murid1, guru1, admin1"
+            />
+          </div>
+          <div>
+            <label htmlFor="password"className="block text-sm font-medium text-slate-300 mb-2">
+              Kata Sandi
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              placeholder="Kata sandi apapun"
+            />
+          </div>
+          {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 bg-cyan-500 text-slate-900 font-bold rounded-lg hover:bg-cyan-400 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
+          >
+            {isLoading ? 'Memuat...' : 'Masuk'}
+          </button>
+        </form>
+         <div className="mt-4 text-center text-xs text-slate-400">
+            <p>Hint: Coba gunakan `murid1`, `guru1`, atau `admin1` sebagai nama pengguna.</p>
         </div>
       </div>
     </div>
