@@ -2,11 +2,11 @@
 import { User, Exam } from '../types.ts';
 
 export const USERS: User[] = [
-  { id: 1, username: 'admin', name: 'Admin Utama', role: 'admin', password: 'admin_854416#' },
-  { id: 2, username: 'guru1', name: 'Budi Guru', role: 'guru', password: 'password' },
-  { id: 3, username: 'guru2', name: 'Ani Guruwati', role: 'guru', password: 'password' },
-  { id: 4, username: 'murid1', name: 'Siti Murid', role: 'murid', password: 'password' },
-  { id: 5, username: 'murid2', name: 'Joko Muridun', role: 'murid', password: 'password' },
+  { id: 1, username: 'admin', name: 'Admin Utama', role: 'admin', password: 'admin_854416#', profilePicture: 'https://i.pravatar.cc/150?u=admin' },
+  { id: 2, username: '198501012010011001', name: 'Budi Guru', role: 'guru', password: 'password', profilePicture: 'https://i.pravatar.cc/150?u=guru1', nip: '198501012010011001', subject: 'Matematika' },
+  { id: 3, username: '199002022015022002', name: 'Ani Guruwati', role: 'guru', password: 'password', profilePicture: 'https://i.pravatar.cc/150?u=guru2', nip: '199002022015022002', subject: 'Ilmu Pengetahuan Alam' },
+  { id: 4, username: '0051234567', name: 'Siti Murid', role: 'murid', password: 'password', profilePicture: 'https://i.pravatar.cc/150?u=murid1', nisn: '0051234567', class: 'XII IPA 1' },
+  { id: 5, username: '0067654321', name: 'Joko Muridun', role: 'murid', password: 'password', profilePicture: 'https://i.pravatar.cc/150?u=murid2', nisn: '0067654321', class: 'XII IPS 2' },
 ];
 
 export const EXAMS: Exam[] = [

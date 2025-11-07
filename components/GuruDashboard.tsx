@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 // FIX: Add .ts extension to ensure modules are resolved correctly.
-import { Exam } from '../types.ts';
+import { Exam, User } from '../types.ts';
 import { fetchExams } from '../services/api.ts';
 import LoadingSpinner from './LoadingSpinner';
 
-const GuruDashboard: React.FC = () => {
+interface GuruDashboardProps {
+  currentUser: User;
+}
+
+const GuruDashboard: React.FC<GuruDashboardProps> = ({ currentUser }) => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +66,7 @@ const GuruDashboard: React.FC = () => {
   return (
     <div className="w-full max-w-5xl mx-auto p-4 md:p-6 text-white pt-24">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold">Dasbor Guru</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-100 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">Dasbor Guru</h1>
         <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
           Buat Ujian Baru
         </button>

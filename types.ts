@@ -22,4 +22,13 @@ export interface User {
   name: string;
   role: UserRole;
   password?: string; // Password is made optional for security.
+  profilePicture?: string; // URL or base64 string for the profile picture
+  
+  // For Guru
+  nip?: string;
+  subject?: string;
+  
+  // For Murid
+  nisn?: string;
+  class?: string;
 }

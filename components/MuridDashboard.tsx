@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 // FIX: Add .ts extension to ensure modules are resolved correctly.
-import { Exam } from '../types.ts';
+import { Exam, User } from '../types.ts';
 import { fetchExams } from '../services/api.ts';
 import LoadingSpinner from './LoadingSpinner';
 
 
 interface MuridDashboardProps {
   onStartExam: (exam: Exam) => void;
+  currentUser: User;
 }
 
-const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam }) => {
+const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam, currentUser }) => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +72,7 @@ const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam }) => {
 
   return (
     <div className="w-full max-w-5xl mx-auto p-4 md:p-6 text-white pt-24">
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">Dasbor Murid</h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-8 text-slate-100 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]">Dasbor Murid</h1>
       
       <div className="bg-slate-800/60 backdrop-blur-sm p-6 rounded-lg border border-slate-700 shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Ujian yang Tersedia</h2>

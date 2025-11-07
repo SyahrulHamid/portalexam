@@ -1,6 +1,7 @@
 // FIX: Provide full implementation for the main App component.
 import React, { useState, useEffect, useCallback } from 'react';
 import { User, Exam } from './types.ts';
+import { updateUser, changePassword } from './services/api.ts';
 import LoginScreen from './components/LoginScreen.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import GuruDashboard from './components/GuruDashboard.tsx';
@@ -9,6 +10,8 @@ import WelcomeScreen from './components/WelcomeScreen.tsx';
 import QuestionCard from './components/QuestionCard.tsx';
 import ResultsScreen from './components/ResultsScreen.tsx';
 import Timer from './components/Timer.tsx';
+import ChangeProfilePictureModal from './components/ChangeProfilePictureModal.tsx';
+import ChangePasswordModal from './components/ChangePasswordModal.tsx';
 
 type AppState = 'login' | 'dashboard' | 'exam-welcome' | 'exam-active' | 'exam-results';
 
@@ -22,6 +25,11 @@ const App: React.FC = () => {
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [score, setScore] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
+
+  // Modal State
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isChangePictureModalOpen, setIsChangePictureModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false);
   
   // FIX: Changed NodeJS.Timeout to ReturnType<typeof setTimeout> to use the correct browser-compatible type for the timer ID.
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -100,7 +108,26 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setUser(null);
     setAppState('login');
+    setIsDropdownOpen(false);
   }
+  
+  const handleUpdateProfilePicture = async (imageDataUrl: string) => {
+    if (!user) return;
+    try {
+      const updatedUser = await updateUser({ id: user.id, profilePicture: imageDataUrl });
+      setUser(updatedUser);
+      setIsChangePictureModalOpen(false);
+    } catch (error) {
+      console.error("Gagal memperbarui foto profil:", error);
+      // Optionally, show an error message to the user
+    }
+  };
+
+  const handleChangePassword = async (oldPassword: string, newPassword: string) => {
+    if (!user) return Promise.reject("Pengguna tidak ditemukan");
+    return await changePassword(user.id, oldPassword, newPassword);
+  };
+
 
   const renderContent = () => {
     switch (appState) {
@@ -111,11 +138,11 @@ const App: React.FC = () => {
         if (!user) return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
         switch (user.role) {
           case 'admin':
-            return <AdminDashboard />;
+            return <AdminDashboard currentUser={user}/>;
           case 'guru':
-            return <GuruDashboard />;
+            return <GuruDashboard currentUser={user}/>;
           case 'murid':
-            return <MuridDashboard onStartExam={handleStartExam} />;
+            return <MuridDashboard currentUser={user} onStartExam={handleStartExam} />;
           default:
             return <div>Peran pengguna tidak diketahui</div>;
         }
@@ -172,16 +199,53 @@ const App: React.FC = () => {
         {user && appState !== 'login' && (
           <header className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-indigo-950/30 backdrop-blur-sm z-20">
             <div className="font-bold text-xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Ujian Online SMAN 14</div>
-            <div>
-              <span className="mr-4 text-slate-300">Selamat datang, {user.name}!</span>
-              <button onClick={handleLogout} className="px-4 py-2 text-sm bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded hover:from-red-600 hover:to-orange-600 transition-all transform hover:scale-105">
-                Keluar
-              </button>
+            <div className="relative">
+              <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                 <span className="text-slate-300 hidden sm:block">Selamat datang, {user.name}!</span>
+                 <img src={user.profilePicture} alt="Foto Profil" className="w-10 h-10 rounded-full border-2 border-slate-500 hover:border-blue-400 transition-colors" />
+              </div>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-slate-800/95 backdrop-blur-sm rounded-md shadow-2xl shadow-black/50 z-50 border border-slate-700">
+                    <div className="p-2">
+                        <div className="px-2 py-2 text-sm text-slate-400 border-b border-slate-700 mb-2">
+                            Masuk sebagai <span className="font-semibold text-white">{user.username}</span>
+                        </div>
+                        <button 
+                            onClick={() => { setIsChangePictureModalOpen(true); setIsDropdownOpen(false); }}
+                            className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 rounded-md transition-colors">
+                            Ubah Foto Profil
+                        </button>
+                        <button 
+                            onClick={() => { setIsChangePasswordModalOpen(true); setIsDropdownOpen(false); }}
+                            className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-slate-700 rounded-md transition-colors">
+                            Ubah Kata Sandi
+                        </button>
+                        <div className="h-px bg-slate-700 my-2"></div>
+                        <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-500/20 rounded-md transition-colors">
+                            Keluar
+                        </button>
+                    </div>
+                </div>
+              )}
             </div>
           </header>
         )}
         {renderContent()}
       </div>
+
+      {isChangePictureModalOpen && user && (
+        <ChangeProfilePictureModal 
+          currentUser={user}
+          onClose={() => setIsChangePictureModalOpen(false)}
+          onSave={handleUpdateProfilePicture}
+        />
+      )}
+       {isChangePasswordModalOpen && user && (
+        <ChangePasswordModal 
+          onClose={() => setIsChangePasswordModalOpen(false)}
+          onChangePassword={handleChangePassword}
+        />
+      )}
     </main>
   );
 }
