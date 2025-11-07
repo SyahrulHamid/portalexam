@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { UserRole, View, Exam } from './types';
-import { MOCK_EXAMS } from './constants/data';
 import LoginScreen from './components/LoginScreen';
 import AdminDashboard from './components/AdminDashboard';
 import GuruDashboard from './components/GuruDashboard';
@@ -127,9 +126,9 @@ const App: React.FC = () => {
       case View.ADMIN_DASHBOARD:
         return <AdminDashboard />;
       case View.GURU_DASHBOARD:
-        return <GuruDashboard exams={MOCK_EXAMS} />;
+        return <GuruDashboard />;
       case View.MURID_DASHBOARD:
-        return <MuridDashboard exams={MOCK_EXAMS} onStartExam={handleStartExam} />;
+        return <MuridDashboard onStartExam={handleStartExam} />;
       case View.EXAM:
         if (!activeExam) return null;
         const currentQuestion = activeExam.questions[currentQuestionIndex];
