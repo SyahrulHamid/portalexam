@@ -48,9 +48,9 @@ const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam }) => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {exams.map(exam => (
-          <div key={exam.id} className="bg-slate-700/50 p-6 rounded-lg flex flex-col justify-between">
+          <div key={exam.id} className="bg-slate-800/50 p-6 rounded-lg flex flex-col justify-between border border-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
             <div>
-              <span className="text-xs font-semibold bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full">{exam.subject}</span>
+              <span className="text-xs font-semibold bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">{exam.subject}</span>
               <h3 className="font-bold text-xl text-white mt-3 mb-2">{exam.title}</h3>
               <ul className="text-sm text-slate-400 space-y-1 mb-4">
                 <li>{exam.questions.length} Pertanyaan</li>
@@ -59,7 +59,7 @@ const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam }) => {
             </div>
             <button 
               onClick={() => onStartExam(exam)}
-              className="w-full mt-2 px-4 py-2 bg-cyan-500 text-slate-900 font-semibold rounded-lg hover:bg-cyan-400 transition-colors"
+              className="w-full mt-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105"
             >
               Mulai Ujian
             </button>
@@ -73,7 +73,7 @@ const MuridDashboard: React.FC<MuridDashboardProps> = ({ onStartExam }) => {
     <div className="w-full max-w-5xl mx-auto p-4 md:p-6 text-white pt-24">
       <h1 className="text-3xl md:text-4xl font-bold mb-8">Dasbor Murid</h1>
       
-      <div className="bg-slate-800/70 p-6 rounded-lg border border-slate-700 shadow-md">
+      <div className="bg-slate-800/60 backdrop-blur-sm p-6 rounded-lg border border-slate-700 shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Ujian yang Tersedia</h2>
         {renderContent()}
       </div>

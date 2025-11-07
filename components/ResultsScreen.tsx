@@ -42,7 +42,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 text-white pt-20">
-      <div className="bg-slate-800/70 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700 text-center mb-8">
+      <div className="bg-slate-800/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700 text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4">Hasil Ujian</h1>
         <p className="text-lg text-slate-300 mb-6">Berikut adalah ringkasan hasil ujian Anda.</p>
         <div className="flex justify-center items-center space-x-8">
@@ -52,7 +52,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
           </div>
           <div className="h-20 w-px bg-slate-600"></div>
           <div>
-            <p className="text-5xl md:text-6xl font-bold text-cyan-400">{score}<span className="text-2xl text-slate-400">/{totalQuestions}</span></p>
+            <p className="text-5xl md:text-6xl font-bold text-blue-400">{score}<span className="text-2xl text-slate-400">/{totalQuestions}</span></p>
             <p className="text-slate-400 mt-1">Jawaban Benar</p>
           </div>
         </div>
@@ -87,7 +87,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({
       <div className="text-center mt-10">
         <button
           onClick={onBackToDashboard}
-          className="px-8 py-3 bg-cyan-500 text-slate-900 font-bold text-lg rounded-lg hover:bg-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-all duration-300 transform hover:scale-105"
+          className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105 shadow-lg"
         >
           Kembali ke Dasbor
         </button>

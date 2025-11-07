@@ -39,9 +39,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
-      <div className="w-full max-w-md bg-slate-800/70 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700">
-        <h1 className="text-3xl font-bold text-center text-cyan-400 mb-6">Selamat Datang</h1>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-slate-800/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700">
+        <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Selamat Datang di Portal Ujian</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
@@ -52,8 +52,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              placeholder="Contoh: murid1, guru1, admin1"
+              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              placeholder="Contoh: murid1, guru1, admin"
             />
           </div>
           <div>
@@ -65,21 +65,21 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              placeholder="Kata sandi apapun"
+              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              placeholder="Kata sandi"
             />
           </div>
           {error && <p className="text-sm text-red-400 text-center">{error}</p>}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-cyan-500 text-slate-900 font-bold rounded-lg hover:bg-cyan-400 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 disabled:from-slate-500 disabled:to-slate-600 disabled:cursor-not-allowed transition-all transform hover:scale-105"
           >
             {isLoading ? 'Memuat...' : 'Masuk'}
           </button>
         </form>
          <div className="mt-4 text-center text-xs text-slate-400">
-            <p>Hint: Coba gunakan `murid1`, `guru1`, atau `admin1` sebagai nama pengguna.</p>
+            <p>Hint: Gunakan `murid1` / `guru1` / `admin`.</p>
         </div>
       </div>
     </div>

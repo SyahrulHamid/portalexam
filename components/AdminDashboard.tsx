@@ -5,6 +5,7 @@ import { fetchUsers, addUser, updateUser, deleteUser } from '../services/api.ts'
 import LoadingSpinner from './LoadingSpinner.tsx';
 import AddUserModal from './AddUserModal.tsx';
 import EditUserModal from './EditUserModal.tsx';
+import ResetPasswordModal from './ResetPasswordModal.tsx';
 
 const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,6 +14,8 @@ const AdminDashboard: React.FC = () => {
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isResetPasswordModalOpen, setIsResetPasswordModalOpen] = useState(false);
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<'murid' | 'guru' | 'admin'>('murid');
 
@@ -51,6 +54,19 @@ const AdminDashboard: React.FC = () => {
       setError('Gagal memperbarui pengguna.');
     }
   };
+  
+  const handleResetPassword = async (userId: number, newPassword: string) => {
+    try {
+      // The updateUser function can handle password updates
+      await updateUser({ id: userId, password: newPassword } as User);
+      // No need to reload users as the underlying data is updated.
+      // But we will close the modal.
+      setIsResetPasswordModalOpen(false);
+      setSelectedUser(null);
+    } catch (err) {
+      setError('Gagal mereset kata sandi.');
+    }
+  };
 
   const handleDeleteUser = async (userId: number) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
@@ -67,6 +83,11 @@ const AdminDashboard: React.FC = () => {
     setSelectedUser(user);
     setIsEditModalOpen(true);
   };
+  
+  const openResetPasswordModal = (user: User) => {
+    setSelectedUser(user);
+    setIsResetPasswordModalOpen(true);
+  }
   
   const displayedUsers = users.filter(user => user.role === activeTab);
 
@@ -86,7 +107,7 @@ const AdminDashboard: React.FC = () => {
     return (
        <div className="overflow-x-auto">
          <table className="w-full text-left">
-           <thead className="text-xs text-slate-400 uppercase bg-slate-700/50">
+           <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
              <tr>
                <th scope="col" className="px-6 py-3">Nama Lengkap</th>
                <th scope="col" className="px-6 py-3">Nama Pengguna</th>
@@ -95,12 +116,15 @@ const AdminDashboard: React.FC = () => {
            </thead>
            <tbody>
              {displayedUsers.map(user => (
-               <tr key={user.id} className="bg-slate-800/60 border-b border-slate-700 hover:bg-slate-700/60">
+               <tr key={user.id} className="bg-slate-800/60 border-b border-slate-700 hover:bg-slate-700/60 transition-colors">
                  <td className="px-6 py-4 font-medium text-white">{user.name}</td>
                  <td className="px-6 py-4 text-slate-300">{user.username}</td>
-                 <td className="px-6 py-4 text-right space-x-2">
-                   <button onClick={() => openEditModal(user)} className="text-sm font-medium text-cyan-400 hover:underline">Edit</button>
-                   <button onClick={() => handleDeleteUser(user.id)} className="text-sm font-medium text-red-400 hover:underline">Hapus</button>
+                 <td className="px-6 py-4 text-right space-x-4">
+                   <button onClick={() => openEditModal(user)} className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">Edit</button>
+                   {user.role !== 'admin' && (
+                     <button onClick={() => openResetPasswordModal(user)} className="text-sm font-medium text-yellow-400 hover:text-yellow-300 transition-colors">Reset Password</button>
+                   )}
+                   <button onClick={() => handleDeleteUser(user.id)} className="text-sm font-medium text-red-500 hover:text-red-400 transition-colors">Hapus</button>
                  </td>
                </tr>
              ))}
@@ -115,29 +139,29 @@ const AdminDashboard: React.FC = () => {
       <div className="w-full max-w-5xl mx-auto p-4 md:p-6 text-white pt-24">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold">Dasbor Admin</h1>
-          <button onClick={() => setIsAddModalOpen(true)} className="px-6 py-2 bg-cyan-500 text-slate-900 font-semibold rounded-lg hover:bg-cyan-400 transition-colors">
+          <button onClick={() => setIsAddModalOpen(true)} className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
             Tambah Pengguna
           </button>
         </div>
         
-        <div className="bg-slate-800/70 p-6 rounded-lg border border-slate-700 shadow-md">
+        <div className="bg-slate-800/60 backdrop-blur-sm p-6 rounded-lg border border-slate-700 shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Manajemen Pengguna</h2>
           <div className="flex border-b border-slate-700">
             <button
               onClick={() => setActiveTab('murid')}
-              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'murid' ? 'border-b-2 border-cyan-400 text-cyan-400' : 'text-slate-400 hover:text-white'}`}
+              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'murid' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400 hover:text-white'}`}
             >
               Murid
             </button>
             <button
               onClick={() => setActiveTab('guru')}
-              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'guru' ? 'border-b-2 border-cyan-400 text-cyan-400' : 'text-slate-400 hover:text-white'}`}
+              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'guru' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400 hover:text-white'}`}
             >
               Guru
             </button>
             <button
               onClick={() => setActiveTab('admin')}
-              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'admin' ? 'border-b-2 border-cyan-400 text-cyan-400' : 'text-slate-400 hover:text-white'}`}
+              className={`px-4 py-2 font-medium transition-colors ${activeTab === 'admin' ? 'border-b-2 border-blue-500 text-blue-400' : 'text-slate-400 hover:text-white'}`}
             >
               Admin
             </button>
@@ -150,6 +174,7 @@ const AdminDashboard: React.FC = () => {
       
       {isAddModalOpen && <AddUserModal onClose={() => setIsAddModalOpen(false)} onAddUser={handleAddUser} />}
       {isEditModalOpen && selectedUser && <EditUserModal user={selectedUser} onClose={() => setIsEditModalOpen(false)} onUpdateUser={handleUpdateUser} />}
+      {isResetPasswordModalOpen && selectedUser && <ResetPasswordModal user={selectedUser} onClose={() => setIsResetPasswordModalOpen(false)} onResetPassword={handleResetPassword} />}
     </>
   );
 };

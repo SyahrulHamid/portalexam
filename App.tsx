@@ -142,7 +142,7 @@ const App: React.FC = () => {
              <div className="mt-8">
                 <button 
                   onClick={handleNextQuestion}
-                  className="px-10 py-3 bg-cyan-500 text-slate-900 font-bold text-lg rounded-lg hover:bg-cyan-400 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed"
+                  className="px-10 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg disabled:from-slate-500 disabled:to-slate-600 disabled:cursor-not-allowed disabled:scale-100"
                   disabled={userAnswers[currentQuestionIndex] === null}
                 >
                   {currentQuestionIndex < currentExam.questions.length - 1 ? 'Berikutnya' : 'Selesaikan Ujian'}
@@ -167,15 +167,14 @@ const App: React.FC = () => {
   }
 
   return (
-    <main className="bg-slate-900 min-h-screen text-slate-100 font-sans relative">
-      <div className="absolute inset-0 bg-[url('/background.svg')] bg-cover bg-center opacity-10"></div>
+    <main className="min-h-screen text-slate-100 font-sans relative">
       <div className="relative z-10">
         {user && appState !== 'login' && (
-          <header className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-slate-900/50 backdrop-blur-sm z-20">
-            <div className="font-bold text-xl text-cyan-400">Ujian Online</div>
+          <header className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center bg-indigo-950/30 backdrop-blur-sm z-20">
+            <div className="font-bold text-xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Ujian Online SMAN 14</div>
             <div>
               <span className="mr-4 text-slate-300">Selamat datang, {user.name}!</span>
-              <button onClick={handleLogout} className="px-4 py-2 text-sm bg-red-600 rounded hover:bg-red-500 transition-colors">
+              <button onClick={handleLogout} className="px-4 py-2 text-sm bg-gradient-to-r from-red-500 to-orange-500 text-white font-semibold rounded hover:from-red-600 hover:to-orange-600 transition-all transform hover:scale-105">
                 Keluar
               </button>
             </div>
