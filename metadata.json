@@ -1,0 +1,5 @@
+{
+  "name": "Portal Ujian SMAN 14",
+  "description": "Portal ujian online untuk Admin, Guru, dan Murid SMAN 14. Kelola ujian, ikuti tes, dan lihat hasil.",
+  "requestFramePermissions": []
+}
