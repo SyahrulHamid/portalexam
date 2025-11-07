@@ -1,35 +1,62 @@
-// FIX: Provide full content for api.ts to create a mock API service.
-import { Exam, User } from '../types.ts';
-import { sampleExams, sampleUsers } from '../constants/data.ts';
+// FIX: Provide full implementation for the API service.
+import { USERS, EXAMS } from '../constants/data.ts';
+import { User, Exam } from '../types.ts';
 
-// Simulate API delay
-const apiDelay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Simulate network delay
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-export const fetchExams = async (): Promise<Exam[]> => {
-  console.log('Fetching exams...');
-  await apiDelay(500);
-  console.log('Fetched exams:', sampleExams);
-  return sampleExams;
+export const login = async (username: string, password?: string): Promise<User | null> => {
+  await delay(500);
+  const user = USERS.find(u => u.username === username && u.password === password);
+  if (user) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: userPassword, ...userWithoutPassword } = user;
+    return userWithoutPassword as User;
+  }
+  return null;
 };
 
 export const fetchUsers = async (): Promise<User[]> => {
-  console.log('Fetching users...');
-  await apiDelay(700);
-  // In a real app, an admin might not see themselves in the user list
-  const manageableUsers = sampleUsers.filter(u => u.role !== 'admin');
-  console.log('Fetched manageable users:', manageableUsers);
-  return manageableUsers;
+  await delay(500);
+  // Return users without passwords
+  return USERS.map(user => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword as User;
+  });
 };
 
-export const login = async (username: string, password: string): Promise<User | null> => {
-  console.log(`Attempting login for user: ${username}`);
-  await apiDelay(500);
-  // Simple mock login: find user by username, ignore password
-  const user = sampleUsers.find(u => u.id === username);
-  if (user) {
-    console.log('Login successful for:', user);
-    return user;
-  }
-  console.log('Login failed for:', username);
-  return null;
-}
+export const fetchExams = async (): Promise<Exam[]> => {
+  await delay(500);
+  return EXAMS;
+};
+
+
+export const addUser = async (user: Omit<User, 'id'>): Promise<User> => {
+    await delay(500);
+    const newUser: User = { ...user, id: Date.now() };
+    const userWithPassword = { ...newUser, password: user.password || 'password' };
+    USERS.push(userWithPassword);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = userWithPassword;
+    return userWithoutPassword;
+};
+
+export const updateUser = async (user: User): Promise<User> => {
+    await delay(500);
+    const index = USERS.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+        USERS[index] = { ...USERS[index], ...user };
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userWithoutPassword } = USERS[index];
+    return userWithoutPassword;
+};
+
+export const deleteUser = async (userId: number): Promise<void> => {
+    await delay(500);
+    const index = USERS.findIndex(u => u.id === userId);
+    if (index !== -1) {
+        USERS.splice(index, 1);
+    }
+};

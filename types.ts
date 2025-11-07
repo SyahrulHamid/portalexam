@@ -1,4 +1,4 @@
-// FIX: Provide full content for types.ts to define data structures used across the app.
+// FIX: Provide full implementation for type definitions.
 export interface Question {
   id: number;
   questionText: string;
@@ -10,14 +10,16 @@ export interface Exam {
   id: number;
   title: string;
   subject: string;
-  questions: Question[];
   duration: number; // in seconds
+  questions: Question[];
 }
 
 export type UserRole = 'admin' | 'guru' | 'murid';
 
 export interface User {
-  id: string;
+  id: number;
+  username: string;
   name: string;
   role: UserRole;
+  password?: string; // Password is made optional for security.
 }
